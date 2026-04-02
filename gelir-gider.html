@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Gelir Gider">
+<title>Gelir Gider Takip</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F5F0E8;
+  --cream-dark: #EAE3D6;
+  --green: #2D4A3E;
+  --green-light: #3A6152;
+  --green-pale: #E8F0EC;
+  --red: #8B3A3A;
+  --red-light: #F0E0E0;
+  --gold: #B8860B;
+  --gold-light: #FDF6E3;
+  --text: #2C2C2C;
+  --text-light: #6B6B6B;
+  --white: #FFFFFF;
+  --shadow: 0 2px 8px rgba(45,74,62,0.08);
+  --shadow-lg: 0 4px 16px rgba(45,74,62,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 90px;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.header {
+  background: var(--green);
+  padding: 20px 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header h1 {
+  font-family: 'Newsreader', serif;
+  color: var(--cream);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.header .subtitle {
+  color: rgba(245,240,232,0.6);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+
+/* PERIOD SELECTOR */
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--cream-dark);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.period-selector::-webkit-scrollbar { display:none; }
+.period-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1.5px solid var(--cream-dark);
+  background: var(--white);
+  font-family: 'Work Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.period-btn.active {
+  background: var(--green);
+  color: var(--cream);
+  border-color: var(--green);
+}
+.year-select {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1.5px solid var(--cream-dark);
+  background: var(--white);
+  font-family: 'Work Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232D4A3E' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+/* SUMMARY CARDS */
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px 20px 8px;
+}
+.summary-card {
+  background: var(--white);
+  border-radius: 4px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.summary-card .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+.summary-card .amount {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+.summary-card.income .amount { color: var(--green); }
+.summary-card.expense .amount { color: var(--red); }
+
+/* BUDGET DASHBOARD */
+.budget-section {
+  margin: 8px 20px 0;
+  background: var(--white);
+  border-radius: 4px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.budget-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.budget-title-row .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+}
+.budget-title-row .edit-btn {
+  background: none;
+  border: 1px solid var(--cream-dark);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 11px;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.budget-calc {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 10px;
+  background: var(--cream);
+  border-radius: 4px;
+}
+.budget-calc .calc-item { text-align: center; }
+.budget-calc .calc-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  margin-bottom: 3px;
+}
+.budget-calc .calc-value {
+  font-family: 'Newsreader', serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+.budget-calc .calc-value.income-clr { color: var(--green); }
+.budget-calc .calc-value.gold-clr { color: var(--gold); }
+.budget-calc .calc-value.blue-clr { color: var(--green-light); }
+.budget-calc .calc-op {
+  font-family: 'Newsreader', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.budget-bar-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.budget-bar-label .remaining-text {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+}
+.budget-bar-label .remaining-amount {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.budget-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: var(--cream-dark);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.budget-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.budget-bar-fill.ok { background: var(--green); }
+.budget-bar-fill.warn { background: var(--gold); }
+.budget-bar-fill.danger { background: var(--red); }
+.budget-bar-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* ACTUAL SAVINGS CARD */
+.savings-actual {
+  margin: 8px 20px 0;
+  background: var(--gold-light);
+  border-radius: 4px;
+  padding: 14px;
+  border: 1px solid rgba(184,134,11,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.savings-actual .sa-left .sa-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+.savings-actual .sa-left .sa-sub {
+  font-size: 10px;
+  color: var(--text-light);
+}
+.savings-actual .sa-amount {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+.savings-actual .sa-status {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+  text-align: right;
+}
+.sa-status.on-track { color: var(--green); }
+.sa-status.behind { color: var(--red); }
+
+/* YEARLY TOTAL */
+.yearly-total {
+  margin: 8px 20px 0;
+  background: var(--green-pale);
+  border-radius: 4px;
+  padding: 14px;
+  border: 1px solid rgba(45,74,62,0.12);
+}
+.yearly-total .label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--green-light);
+  margin-bottom: 6px;
+}
+.yearly-total .stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.yearly-total .stat-item .stat-label {
+  font-size: 10px;
+  color: var(--green-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.yearly-total .stat-item .stat-amount {
+  font-family: 'Newsreader', serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+.yearly-total .stat-item .stat-amount.income-clr { color: var(--green); }
+.yearly-total .stat-item .stat-amount.expense-clr { color: var(--red); }
+.yearly-total .stat-item .stat-amount.net-clr { color: var(--green); }
+
+/* TABS */
+.tab-bar {
+  display: flex;
+  margin: 16px 20px 0;
+  background: var(--cream-dark);
+  border-radius: 4px;
+  padding: 3px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--white);
+  color: var(--green);
+  box-shadow: var(--shadow);
+}
+
+/* ENTRIES LIST */
+.entries-list { padding: 12px 20px; }
+.entries-list .section-title {
+  font-family: 'Newsreader', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--cream-dark);
+}
+.entry-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--cream-dark);
+  gap: 10px;
+  animation: fadeIn 0.25s ease;
+}
+.entry-item:last-child { border-bottom: none; }
+.entry-cat {
+  width: 36px; height: 36px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.entry-cat.income-cat { background: var(--green-pale); }
+.entry-cat.expense-cat { background: var(--red-light); }
+.entry-info { flex:1; min-width:0; }
+.entry-info .name {
+  font-size: 14px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.entry-info .cat { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.entry-amount {
+  font-family: 'Newsreader', serif;
+  font-size: 16px; font-weight: 600; flex-shrink: 0; text-align: right;
+}
+.entry-amount.income { color: var(--green); }
+.entry-amount.expense { color: var(--red); }
+.entry-delete {
+  width: 28px; height: 28px; border: none;
+  background: var(--cream-dark); border-radius: 4px;
+  font-size: 13px; color: var(--text-light); cursor: pointer;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; opacity:0.4; }
+.empty-state p { font-size: 14px; }
+
+/* FAB */
+.fab {
+  position: fixed; bottom: 24px; right: 20px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--green); color: var(--cream);
+  border: none; font-size: 28px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-lg); cursor: pointer; z-index: 90;
+  transition: transform 0.2s;
+}
+.fab:active { transform: scale(0.92); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white);
+  width: 100%; max-width: 480px;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 20px 32px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle {
+  width: 36px; height: 4px;
+  background: var(--cream-dark); border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.modal h2 {
+  font-family: 'Newsreader', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--green); margin-bottom: 16px;
+}
+.modal-type-toggle {
+  display: flex; margin-bottom: 16px;
+  background: var(--cream-dark); border-radius: 4px; padding: 3px;
+}
+.type-btn {
+  flex: 1; padding: 10px; border: none; background: transparent;
+  font-family: 'Work Sans', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--text-light); cursor: pointer; border-radius: 3px; transition: all 0.2s;
+}
+.type-btn.active.income-type { background: var(--green-pale); color: var(--green); }
+.type-btn.active.expense-type { background: var(--red-light); color: var(--red); }
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-light); margin-bottom: 6px;
+}
+.form-group input, .form-group select {
+  width: 100%; padding: 12px;
+  border: 1.5px solid var(--cream-dark); border-radius: 4px;
+  font-family: 'Work Sans', sans-serif; font-size: 15px;
+  color: var(--text); background: var(--white);
+  -webkit-appearance: none; appearance: none; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--green); }
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232D4A3E' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
+}
+.form-group input[type="number"] {
+  font-family: 'Newsreader', serif; font-size: 20px; font-weight: 600;
+}
+.form-group .hint {
+  font-size: 11px; color: var(--text-light); margin-top: 4px;
+}
+.submit-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 4px;
+  font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s; margin-top: 4px;
+}
+.submit-btn:active { opacity: 0.85; }
+.submit-btn.income-submit { background: var(--green); color: var(--cream); }
+.submit-btn.expense-submit { background: var(--red); color: var(--white); }
+
+/* Toast */
+.toast {
+  position: fixed; top: 80px; left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--green); color: var(--cream);
+  padding: 10px 20px; border-radius: 4px;
+  font-size: 13px; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; transition: all 0.3s; z-index: 300;
+  pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Gelir & Gider</h1>
+  <div class="subtitle">Aylık Takip Sistemi</div>
+</div>
+
+<div class="period-selector" id="periodSelector"></div>
+
+<!-- Gelir / Gider Toplamları -->
+<div class="summary-row">
+  <div class="summary-card income">
+    <div class="label">Gelir</div>
+    <div class="amount" id="totalIncome">₺0</div>
+  </div>
+  <div class="summary-card expense">
+    <div class="label">Gider</div>
+    <div class="amount" id="totalExpense">₺0</div>
+  </div>
+</div>
+
+<!-- Bütçe Paneli -->
+<div class="budget-section">
+  <div class="budget-title-row">
+    <span class="label">Bütçe Durumu</span>
+    <button class="edit-btn" onclick="openSavingsModal()">Hedef Belirle</button>
+  </div>
+
+  <!-- Hesaplama satırı: Gelir - Birikim Hedefi = Harcama Limiti -->
+  <div class="budget-calc">
+    <div class="calc-item">
+      <div class="calc-label">Gelir</div>
+      <div class="calc-value income-clr" id="calcIncome">₺0</div>
+    </div>
+    <div class="calc-op">−</div>
+    <div class="calc-item">
+      <div class="calc-label">Birikim</div>
+      <div class="calc-value gold-clr" id="calcSavingsTarget">₺0</div>
+    </div>
+    <div class="calc-op">=</div>
+    <div class="calc-item">
+      <div class="calc-label">Limit</div>
+      <div class="calc-value blue-clr" id="calcLimit">₺0</div>
+    </div>
+  </div>
+
+  <!-- Kalan bütçe barı -->
+  <div class="budget-bar-label">
+    <span class="remaining-text">Kalan Bütçe</span>
+    <span class="remaining-amount" id="budgetRemaining">₺0</span>
+  </div>
+  <div class="budget-bar-bg">
+    <div class="budget-bar-fill ok" id="budgetBar" style="width:0%"></div>
+  </div>
+  <div class="budget-bar-info">
+    <span id="budgetSpent">Harcanan: ₺0</span>
+    <span id="budgetPercent">%0</span>
+  </div>
+</div>
+
+<!-- Gerçek Birikim -->
+<div class="savings-actual">
+  <div class="sa-left">
+    <div class="sa-label">Gerçek Birikim</div>
+    <div class="sa-sub">Gelir − Gider</div>
+  </div>
+  <div style="text-align:right">
+    <div class="sa-amount" id="actualSavings">₺0</div>
+    <div class="sa-status on-track" id="savingsStatus">—</div>
+  </div>
+</div>
+
+<!-- Yıllık Özet -->
+<div class="yearly-total">
+  <div class="label" id="yearLabel">2026 Yıllık Özet</div>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-label">Gelir</div>
+      <div class="stat-amount income-clr" id="yearIncome">₺0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Gider</div>
+      <div class="stat-amount expense-clr" id="yearExpense">₺0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Net</div>
+      <div class="stat-amount net-clr" id="yearNet">₺0</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('all')">Tümü</button>
+  <button class="tab-btn" onclick="switchTab('income')">Gelirler</button>
+  <button class="tab-btn" onclick="switchTab('expense')">Giderler</button>
+</div>
+
+<div class="entries-list" id="entriesList"></div>
+
+<button class="fab" onclick="openAddModal()">+</button>
+
+<!-- Kayıt Ekleme Modalı -->
+<div class="modal-overlay" id="addModal" onclick="closeOnOverlay(event,'addModal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Yeni Kayıt</h2>
+    <div class="modal-type-toggle">
+      <button class="type-btn active income-type" id="typeIncome" onclick="setType('income')">Gelir</button>
+      <button class="type-btn expense-type" id="typeExpense" onclick="setType('expense')">Gider</button>
+    </div>
+    <div class="form-group">
+      <label>Açıklama</label>
+      <input type="text" id="entryName" placeholder="Ör: Market alışverişi" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Kategori</label>
+      <select id="entryCategory"></select>
+    </div>
+    <div class="form-group">
+      <label>Tutar (₺)</label>
+      <input type="number" id="entryAmount" placeholder="0" inputmode="decimal" min="0" step="any">
+    </div>
+    <button class="submit-btn expense-submit" id="submitBtn" onclick="addEntry()">Gider Ekle</button>
+  </div>
+</div>
+
+<!-- Birikim Hedefi Modalı -->
+<div class="modal-overlay" id="savingsModal" onclick="closeOnOverlay(event,'savingsModal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>Birikim Hedefi</h2>
+    <div class="form-group">
+      <label>Bu Ay Ne Kadar Biriktirmek İstiyorsun? (₺)</label>
+      <input type="number" id="savingsInput" placeholder="40000" inputmode="decimal" min="0" step="any">
+      <div class="hint" id="savingsHint">Harcama limitin otomatik hesaplanacak</div>
+    </div>
+    <button class="submit-btn income-submit" onclick="saveSavingsGoal()">Kaydet</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const MONTH_SHORT = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+
+const EXPENSE_CATS = [
+  {id:'market', label:'Market', icon:'🛒'},
+  {id:'giyim', label:'Giyim', icon:'👕'},
+  {id:'kisisel', label:'Kişisel', icon:'💆'},
+  {id:'ulasim', label:'Ulaşım', icon:'🚌'},
+  {id:'fatura', label:'Faturalar', icon:'📄'},
+  {id:'yemek', label:'Yeme-İçme', icon:'🍽️'},
+  {id:'saglik', label:'Sağlık', icon:'💊'},
+  {id:'eglence', label:'Eğlence', icon:'🎬'},
+  {id:'egitim', label:'Eğitim', icon:'📚'},
+  {id:'ev', label:'Ev & Kira', icon:'🏠'},
+  {id:'diger_gider', label:'Diğer', icon:'📌'},
+];
+const INCOME_CATS = [
+  {id:'maas', label:'Maaş', icon:'💰'},
+  {id:'satis', label:'Satış', icon:'🏷️'},
+  {id:'freelance', label:'Freelance', icon:'💻'},
+  {id:'yatirim', label:'Yatırım', icon:'📈'},
+  {id:'hediye', label:'Hediye', icon:'🎁'},
+  {id:'diger_gelir', label:'Diğer', icon:'📌'},
+];
+
+let currentType = 'expense';
+let currentTab = 'all';
+let selectedMonth = new Date().getMonth();
+let selectedYear = new Date().getFullYear();
+
+/* ===== STORAGE ===== */
+function getData() {
+  try { return JSON.parse(localStorage.getItem('gg_data') || '{}'); } catch { return {}; }
+}
+function saveData(d) { localStorage.setItem('gg_data', JSON.stringify(d)); }
+function getKey(y, m) { return y + '-' + String(m).padStart(2,'0'); }
+function getEntries(y, m) { return getData()[getKey(y, m)] || []; }
+function setEntries(y, m, entries) {
+  const d = getData(); d[getKey(y, m)] = entries; saveData(d);
+}
+function getSavingsGoal(y, m) {
+  try { return (JSON.parse(localStorage.getItem('gg_savings') || '{}'))[getKey(y,m)] || 0; }
+  catch { return 0; }
+}
+function setSavingsGoal(y, m, val) {
+  try {
+    const g = JSON.parse(localStorage.getItem('gg_savings') || '{}');
+    g[getKey(y,m)] = val;
+    localStorage.setItem('gg_savings', JSON.stringify(g));
+  } catch {}
+}
+
+/* ===== PERIOD SELECTOR ===== */
+function renderPeriodSelector() {
+  const el = document.getElementById('periodSelector');
+  let html = '<select class="year-select" onchange="changeYear(this.value)">';
+  for (let y = 2024; y <= 2030; y++)
+    html += '<option value="'+y+'" '+(y===selectedYear?'selected':'')+'>'+y+'</option>';
+  html += '</select>';
+  for (let m = 0; m < 12; m++)
+    html += '<button class="period-btn '+(m===selectedMonth?'active':'')+'" onclick="changeMonth('+m+')">'+MONTH_SHORT[m]+'</button>';
+  el.innerHTML = html;
+  setTimeout(() => {
+    const a = el.querySelector('.period-btn.active');
+    if (a) a.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  }, 50);
+}
+function changeMonth(m) { selectedMonth = m; renderAll(); }
+function changeYear(y) { selectedYear = parseInt(y); renderAll(); }
+
+/* ===== SUMMARY + BUDGET ===== */
+function renderSummary() {
+  const entries = getEntries(selectedYear, selectedMonth);
+  const inc = entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  const exp = entries.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+
+  // Gelir / Gider kartları
+  document.getElementById('totalIncome').textContent = fmt(inc);
+  document.getElementById('totalExpense').textContent = fmt(exp);
+
+  // Birikim hedefi & hesaplama
+  const savingsTarget = getSavingsGoal(selectedYear, selectedMonth);
+  const spendingLimit = Math.max(0, inc - savingsTarget);
+
+  // Hesaplama satırı
+  document.getElementById('calcIncome').textContent = fmt(inc);
+  document.getElementById('calcSavingsTarget').textContent = fmt(savingsTarget);
+  document.getElementById('calcLimit').textContent = fmt(spendingLimit);
+
+  // Bar
+  const remaining = Math.max(0, spendingLimit - exp);
+  const pct = spendingLimit > 0 ? Math.min(100, (exp / spendingLimit) * 100) : (exp > 0 ? 100 : 0);
+
+  document.getElementById('budgetRemaining').textContent = fmt(remaining);
+  if (spendingLimit > 0 && exp > spendingLimit) {
+    document.getElementById('budgetRemaining').textContent = '−' + fmt(exp - spendingLimit);
+    document.getElementById('budgetRemaining').style.color = 'var(--red)';
+  } else {
+    document.getElementById('budgetRemaining').style.color = 'var(--gold)';
+  }
+
+  document.getElementById('budgetSpent').textContent = 'Harcanan: ' + fmt(exp);
+  document.getElementById('budgetPercent').textContent = '%' + Math.round(pct);
+
+  const bar = document.getElementById('budgetBar');
+  bar.style.width = pct + '%';
+  bar.className = 'budget-bar-fill ' + (pct < 60 ? 'ok' : pct < 85 ? 'warn' : 'danger');
+
+  // Gerçek birikim
+  const actualSav = inc - exp;
+  const savEl = document.getElementById('actualSavings');
+  savEl.textContent = (actualSav >= 0 ? '' : '−') + fmt(Math.abs(actualSav));
+  savEl.style.color = actualSav >= 0 ? 'var(--gold)' : 'var(--red)';
+
+  const statusEl = document.getElementById('savingsStatus');
+  if (savingsTarget > 0) {
+    if (actualSav >= savingsTarget) {
+      statusEl.textContent = 'Hedefe ulaşıldı ✓';
+      statusEl.className = 'sa-status on-track';
+    } else if (actualSav >= 0) {
+      const diff = savingsTarget - actualSav;
+      statusEl.textContent = 'Hedefe ' + fmt(diff) + ' kaldı';
+      statusEl.className = 'sa-status behind';
+    } else {
+      statusEl.textContent = 'Açık var!';
+      statusEl.className = 'sa-status behind';
+    }
+  } else {
+    statusEl.textContent = 'Hedef belirlenmedi';
+    statusEl.className = 'sa-status';
+    statusEl.style.color = 'var(--text-light)';
+  }
+
+  // Yıllık
+  const data = getData();
+  let yInc = 0, yExp = 0;
+  for (let m = 0; m < 12; m++) {
+    const ents = data[getKey(selectedYear, m)] || [];
+    yInc += ents.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+    yExp += ents.filter(e=>e.type==='expense').reduce((s,e)=>s+e.amount,0);
+  }
+  const net = yInc - yExp;
+  document.getElementById('yearLabel').textContent = selectedYear + ' Yıllık Özet';
+  document.getElementById('yearIncome').textContent = fmt(yInc);
+  document.getElementById('yearExpense').textContent = fmt(yExp);
+  const netEl = document.getElementById('yearNet');
+  netEl.textContent = (net >= 0 ? '+' : '') + fmt(net);
+  netEl.style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+}
+
+/* ===== ENTRIES ===== */
+function renderEntries() {
+  const entries = getEntries(selectedYear, selectedMonth);
+  const el = document.getElementById('entriesList');
+  let filtered = currentTab === 'all' ? entries : entries.filter(e => e.type === currentTab);
+  filtered.sort((a,b) => b.ts - a.ts);
+
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>'+MONTHS_TR[selectedMonth]+' '+selectedYear+' için kayıt yok</p></div>';
+    return;
+  }
+  const allCats = [...EXPENSE_CATS, ...INCOME_CATS];
+  let html = '<div class="section-title">'+MONTHS_TR[selectedMonth]+' '+selectedYear+'</div>';
+  filtered.forEach(entry => {
+    const cat = allCats.find(c=>c.id===entry.category) || {icon:'📌',label:'Diğer'};
+    const realIdx = entries.indexOf(entry);
+    html += '<div class="entry-item">' +
+      '<div class="entry-cat '+(entry.type==='income'?'income-cat':'expense-cat')+'">'+cat.icon+'</div>' +
+      '<div class="entry-info"><div class="name">'+esc(entry.name)+'</div>' +
+      '<div class="cat">'+cat.label+' · '+fmtDate(entry.ts)+'</div></div>' +
+      '<div class="entry-amount '+entry.type+'">'+(entry.type==='expense'?'− ':'+&nbsp;')+fmt(entry.amount)+'</div>' +
+      '<button class="entry-delete" onclick="deleteEntry('+realIdx+')">✕</button></div>';
+  });
+  el.innerHTML = html;
+}
+
+/* ===== TABS ===== */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) =>
+    b.classList.toggle('active', ['all','income','expense'][i] === tab));
+  renderEntries();
+}
+
+/* ===== ADD MODAL ===== */
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+  document.getElementById('entryName').value = '';
+  document.getElementById('entryAmount').value = '';
+  setType(currentType);
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOnOverlay(e, id) { if (e.target === e.currentTarget) closeModal(id); }
+
+function setType(type) {
+  currentType = type;
+  document.getElementById('typeIncome').classList.toggle('active', type==='income');
+  document.getElementById('typeExpense').classList.toggle('active', type==='expense');
+  const btn = document.getElementById('submitBtn');
+  btn.className = 'submit-btn ' + (type==='income' ? 'income-submit' : 'expense-submit');
+  btn.textContent = type==='income' ? 'Gelir Ekle' : 'Gider Ekle';
+  const sel = document.getElementById('entryCategory');
+  const cats = type === 'income' ? INCOME_CATS : EXPENSE_CATS;
+  sel.innerHTML = cats.map(c => '<option value="'+c.id+'">'+c.icon+' '+c.label+'</option>').join('');
+}
+
+function addEntry() {
+  const name = document.getElementById('entryName').value.trim();
+  const category = document.getElementById('entryCategory').value;
+  const amount = parseFloat(document.getElementById('entryAmount').value);
+  if (!name) { showToast('Açıklama giriniz'); return; }
+  if (!amount || amount <= 0) { showToast('Geçerli tutar giriniz'); return; }
+  const entries = getEntries(selectedYear, selectedMonth);
+  entries.push({ type: currentType, name, category, amount, ts: Date.now() });
+  setEntries(selectedYear, selectedMonth, entries);
+  closeModal('addModal');
+  showToast(currentType === 'income' ? 'Gelir eklendi ✓' : 'Gider eklendi ✓');
+  renderAll();
+}
+
+function deleteEntry(idx) {
+  if (!confirm('Bu kaydı silmek istediğinize emin misiniz?')) return;
+  const entries = getEntries(selectedYear, selectedMonth);
+  entries.splice(idx, 1);
+  setEntries(selectedYear, selectedMonth, entries);
+  showToast('Silindi');
+  renderAll();
+}
+
+/* ===== SAVINGS MODAL ===== */
+function openSavingsModal() {
+  document.getElementById('savingsModal').classList.add('open');
+  const current = getSavingsGoal(selectedYear, selectedMonth);
+  document.getElementById('savingsInput').value = current || '';
+
+  // Hint güncelle
+  const entries = getEntries(selectedYear, selectedMonth);
+  const inc = entries.filter(e=>e.type==='income').reduce((s,e)=>s+e.amount,0);
+  if (inc > 0) {
+    document.getElementById('savingsHint').textContent = 'Toplam gelirin: ' + fmt(inc);
+  } else {
+    document.getElementById('savingsHint').textContent = 'Önce gelir ekle, limit otomatik hesaplansın';
+  }
+}
+function saveSavingsGoal() {
+  const val = parseFloat(document.getElementById('savingsInput').value) || 0;
+  setSavingsGoal(selectedYear, selectedMonth, val);
+  closeModal('savingsModal');
+  showToast('Birikim hedefi güncellendi ✓');
+  renderAll();
+}
+
+/* ===== UTILS ===== */
+function fmt(n) { return '₺' + Math.round(Math.abs(n)).toLocaleString('tr-TR'); }
+function fmtDate(ts) {
+  const d = new Date(ts);
+  return d.getDate() + ' ' + MONTH_SHORT[d.getMonth()];
+}
+function esc(s) {
+  const el = document.createElement('span');
+  el.textContent = s; return el.innerHTML;
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+function renderAll() {
+  renderPeriodSelector();
+  renderSummary();
+  renderEntries();
+}
+
+renderAll();
+</script>
+</body>
+</html>
