@@ -618,9 +618,9 @@ function renderAdvice(income, expense, net, txs) {
     if (income > 0) {
       const ratio = expense / income;
       if (ratio > 0.85) {
-        cards.push({cls:'red', icon:'🔴', text:'Giderlerin gelirinizin %' + Math.round(ratio*100) + "'u. Bu oran çok yüksek — büyük kalemlerini gözden geçir."});
+        cards.push({cls:'red', icon:'🔴', text:'Giderlerin gelirinizin %' + Math.round(ratio*100) + 'u. Bu oran cok yuksek — buyuk kalemlerini gozden gecir.'});
       } else if (ratio < 0.5) {
-        cards.push({cls:'green', icon:'💚', text:'Harika! Gelirinizin sadece %' + Math.round(ratio*100) + "'ini harcıyorsunuz. Birikim için mükemmel bir ay."});
+        cards.push({cls:'green', icon:'💚', text:'Harika! Gelirinizin sadece %' + Math.round(ratio*100) + 'ini harciyorsunuz. Birikim icin mukemmel bir ay.'});
       }
     }
 
@@ -658,25 +658,27 @@ function renderList(txs) {
   empty.style.display = 'none';
   renderCatSummary(txs);
 
-  el.innerHTML = sorted.map(t => {
-    const cat = data.categories.find(c=>c.id===t.catId);
-    const icon = cat ? cat.emoji : (t.type==='income'?'💰':'💸');
-    const catName = cat ? cat.name : '—';
-    const dt = new Date(t.date + 'T12:00:00');
-    const dateStr = dt.toLocaleDateString('tr-TR', {day:'2-digit',month:'short'});
-    return `<div class="tx-item">
-      <div class="tx-dot ${t.type}">${icon}</div>
-      <div class="tx-body">
-        <div class="tx-cat">${catName}</div>
-        ${t.note ? '<div class="tx-note">' + escHtml(t.note) + '</div>' : ''}
-        <div class="tx-date">${dateStr}</div>
-      </div>
-      <div class="tx-amount ${t.type}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
-      <div class="tx-actions">
-        <button class="tx-btn" onclick="editTx('${t.id}')">✏️</button>
-        <button class="tx-btn" onclick="deleteTx('${t.id}')">🗑</button>
-      </div>
-    </div>`;
+  el.innerHTML = sorted.map(function(t) {
+    var cat = data.categories.find(function(c){return c.id===t.catId;});
+    var icon = cat ? cat.emoji : (t.type==='income'?'💰':'💸');
+    var catName = cat ? cat.name : '—';
+    var dt = new Date(t.date + 'T12:00:00');
+    var dateStr = dt.toLocaleDateString('tr-TR', {day:'2-digit',month:'short'});
+    var noteHtml = t.note ? '<div class="tx-note">' + escHtml(t.note) + '</div>' : '';
+    var sign = t.type==='income' ? '+' : '-';
+    return '<div class="tx-item">' +
+      '<div class="tx-dot ' + t.type + '">' + icon + '</div>' +
+      '<div class="tx-body">' +
+        '<div class="tx-cat">' + escHtml(catName) + '</div>' +
+        noteHtml +
+        '<div class="tx-date">' + dateStr + '</div>' +
+      '</div>' +
+      '<div class="tx-amount ' + t.type + '">' + sign + fmt(t.amount) + '</div>' +
+      '<div class="tx-actions">' +
+        '<button class="tx-btn" onclick="editTx(\'' + t.id + '\')">&#9999;&#65039;</button>' +
+        '<button class="tx-btn" onclick="deleteTx(\'' + t.id + '\')">&#128465;</button>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
