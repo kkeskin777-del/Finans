@@ -3,899 +3,659 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Gelir Gider Takip</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Kasam</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FFF8F2;--or:#FF8C42;--orl:#FFB380;--orp:#FFF0E6;
+  --tx:#3D2C1E;--ts:#9A7B6A;--wh:#FFFFFF;--bd:#F0E4D8;
+  --gr:#52B788;--rd:#E07A5F;--sh:0 2px 16px rgba(255,140,66,0.10);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:88px;-webkit-font-smoothing:antialiased}
 
-  :root {
-    --bg: #FFF8F2;
-    --orange: #FF8C42;
-    --orange-light: #FFB380;
-    --orange-pale: #FFF0E6;
-    --orange-mid: #FFCCA8;
-    --text: #3D2C1E;
-    --text-soft: #9A7B6A;
-    --white: #FFFFFF;
-    --border: #F0E4D8;
-    --green: #52B788;
-    --red: #E07A5F;
-    --shadow: 0 2px 16px rgba(255,140,66,0.10);
-  }
+/* HEADER */
+.hdr{background:var(--or);padding:20px 20px 24px;position:sticky;top:0;z-index:50}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.hdr-top h1{font-size:20px;font-weight:800;color:#fff}
+.mnav{display:flex;align-items:center;gap:8px}
+.mnav button{background:rgba(255,255,255,0.25);border:none;border-radius:8px;color:#fff;width:32px;height:32px;font-size:18px;cursor:pointer}
+.mlbl{color:#fff;font-weight:700;font-size:14px;min-width:108px;text-align:center}
+.srow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.sc{background:rgba(255,255,255,0.2);border-radius:12px;padding:10px 6px;text-align:center}
+.sc .sl{font-size:10px;color:rgba(255,255,255,0.85);font-weight:700}
+.sc .sv{font-size:15px;font-weight:800;color:#fff;margin-top:2px}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 80px;
-    -webkit-font-smoothing: antialiased;
-  }
+/* TABS */
+.tabs{display:flex;gap:6px;padding:14px 14px 0}
+.tab{flex:1;padding:10px 2px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--wh);color:var(--ts);box-shadow:var(--sh)}
+.tab.active{background:var(--or);color:#fff}
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--orange);
-    padding: 20px 20px 28px;
-    position: sticky; top: 0; z-index: 50;
-  }
-  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .header h1 { font-size: 20px; font-weight: 800; color: var(--white); }
-  .month-nav { display: flex; align-items: center; gap: 10px; }
-  .month-nav button {
-    background: rgba(255,255,255,0.25); border: none; border-radius: 8px;
-    color: var(--white); width: 32px; height: 32px; font-size: 16px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-  }
-  .month-label { color: var(--white); font-weight: 700; font-size: 15px; min-width: 110px; text-align: center; }
+/* PAGES */
+.page{padding:12px 14px}
 
-  .summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .summary-card {
-    background: rgba(255,255,255,0.22); border-radius: 14px;
-    padding: 10px 8px; text-align: center;
-  }
-  .summary-card .s-label { font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 600; }
-  .summary-card .s-val { font-size: 16px; font-weight: 800; color: var(--white); margin-top: 2px; }
+/* GOAL PANEL */
+.gpanel{background:var(--wh);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.gpanel h3{font-size:13px;font-weight:800;margin-bottom:10px}
+.gtabs{display:flex;gap:6px;margin-bottom:12px}
+.gtab{flex:1;padding:6px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--orp);color:var(--ts)}
+.gtab.active{background:var(--or);color:#fff}
+.ginfo{display:flex;justify-content:space-between;margin-bottom:6px}
+.ginfo span{font-size:12px;color:var(--ts);font-weight:600}
+.gpct{font-size:13px;font-weight:800;color:var(--or)}
+.ptrack{height:13px;background:var(--orp);border-radius:99px;overflow:hidden}
+.pfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orl),var(--or));transition:width .5s ease}
+.gdet{margin-top:7px;font-size:11px;color:var(--ts);text-align:right}
 
-  /* ── TABS ── */
-  .tabs { display: flex; gap: 6px; padding: 16px 16px 0; }
-  .tab {
-    flex: 1; padding: 10px 4px; border: none; border-radius: 12px;
-    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
-    cursor: pointer; transition: all .2s;
-    background: var(--white); color: var(--text-soft);
-    box-shadow: var(--shadow);
-  }
-  .tab.active { background: var(--orange); color: var(--white); }
+/* ADVICE */
+.adv-wrap{margin-bottom:12px}
+.sec-title{font-size:12px;font-weight:800;color:var(--ts);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.acard{border-radius:13px;padding:11px 13px;display:flex;align-items:flex-start;gap:9px;margin-bottom:7px}
+.acard .ai{font-size:19px;flex-shrink:0;margin-top:1px}
+.acard .at{font-size:13px;font-weight:600;line-height:1.45;color:var(--tx)}
+.acard.green{background:#EAFAF3}.acard.yellow{background:#FFF8E1}.acard.orange{background:var(--orp)}.acard.red{background:#FDECEA}
 
-  /* ── SECTION ── */
-  .section { padding: 12px 16px; }
+/* CAT SUMMARY */
+.cspanel{background:var(--wh);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.cstabs{display:flex;gap:6px;margin-bottom:12px}
+.cstab{flex:1;padding:7px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:var(--orp);color:var(--ts)}
+.cstab.active{background:var(--or);color:#fff}
+.csrow{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.csico{font-size:18px;width:26px;text-align:center;flex-shrink:0}
+.csbw{flex:1}
+.csname{font-size:12px;font-weight:700;color:var(--tx);display:flex;justify-content:space-between;margin-bottom:3px}
+.csname span{font-weight:600;color:var(--ts)}
+.cstrk{height:7px;background:var(--orp);border-radius:99px;overflow:hidden}
+.csfill{height:100%;border-radius:99px;transition:width .4s ease}
+.csfill.expense{background:linear-gradient(90deg,#FFB380,#E07A5F)}
+.csfill.income{background:linear-gradient(90deg,#80D9AE,#52B788)}
 
-  /* ── GOAL BAR ── */
-  .goal-panel {
-    background: var(--white); border-radius: 18px; padding: 16px;
-    margin: 12px 16px 0; box-shadow: var(--shadow);
-  }
-  .goal-panel .gp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .goal-panel h3 { font-size: 14px; font-weight: 800; color: var(--text); }
-  .goal-panel .gp-edit { background: none; border: none; color: var(--orange); font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; }
-  .goal-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-  .goal-tab { flex: 1; padding: 5px; border-radius: 8px; border: none; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; background: var(--orange-pale); color: var(--text-soft); }
-  .goal-tab.active { background: var(--orange); color: var(--white); }
-  .goal-info { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .goal-info span { font-size: 12px; color: var(--text-soft); font-weight: 600; }
-  .goal-info .goal-pct { font-size: 13px; font-weight: 800; color: var(--orange); }
-  .progress-track { height: 14px; background: var(--orange-pale); border-radius: 99px; overflow: hidden; }
-  .progress-fill {
-    height: 100%; border-radius: 99px;
-    background: linear-gradient(90deg, var(--orange-light), var(--orange));
-    transition: width .6s cubic-bezier(.4,0,.2,1);
-  }
-  .goal-detail { margin-top: 8px; font-size: 11px; color: var(--text-soft); text-align: right; }
+/* TX LIST */
+.txlist{display:flex;flex-direction:column;gap:8px}
+.txi{background:var(--wh);border-radius:15px;padding:13px 14px;display:flex;align-items:center;gap:11px;box-shadow:var(--sh)}
+.txdot{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.txdot.income{background:#EAFAF3}.txdot.expense{background:#FDECEA}
+.txbody{flex:1;min-width:0}
+.txcat{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txnote{font-size:11px;color:var(--ts);margin-top:1px}
+.txdate{font-size:10px;color:var(--ts);margin-top:2px}
+.txamt{font-size:14px;font-weight:800;flex-shrink:0}
+.txamt.income{color:var(--gr)}.txamt.expense{color:var(--rd)}
+.txact{display:flex;gap:4px;flex-shrink:0}
+.txbtn{background:none;border:none;cursor:pointer;padding:5px;border-radius:8px;font-size:16px}
 
-  /* ── ADVICE PANEL ── */
-  .advice-panel { margin: 10px 16px 0; }
-  .advice-panel h3 { font-size: 13px; font-weight: 800; color: var(--text-soft); margin-bottom: 8px; padding-left: 2px; }
-  .advice-cards { display: flex; flex-direction: column; gap: 8px; }
-  .advice-card {
-    border-radius: 14px; padding: 12px 14px;
-    display: flex; align-items: flex-start; gap: 10px;
-  }
-  .advice-card .ac-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .advice-card .ac-text { font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--text); }
-  .advice-card.green { background: #EAFAF3; }
-  .advice-card.yellow { background: #FFF8E1; }
-  .advice-card.orange { background: var(--orange-pale); }
-  .advice-card.red { background: #FDECEA; }
+/* EMPTY */
+.empty{text-align:center;padding:36px 20px;color:var(--ts)}
+.empty .ei{font-size:42px;margin-bottom:10px}
+.empty p{font-size:14px;font-weight:600}
 
-  /* ── TRANSACTION LIST ── */
-  .tx-list { display: flex; flex-direction: column; gap: 8px; }
-  .tx-item {
-    background: var(--white); border-radius: 16px; padding: 14px 16px;
-    display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow);
-    position: relative;
-  }
-  .tx-dot { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-  .tx-dot.income { background: #EAFAF3; }
-  .tx-dot.expense { background: #FDECEA; }
-  .tx-body { flex: 1; min-width: 0; }
-  .tx-cat { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tx-note { font-size: 11px; color: var(--text-soft); margin-top: 1px; }
-  .tx-date { font-size: 10px; color: var(--text-soft); margin-top: 2px; }
-  .tx-amount { font-size: 15px; font-weight: 800; flex-shrink: 0; }
-  .tx-amount.income { color: var(--green); }
-  .tx-amount.expense { color: var(--red); }
-  .tx-actions { display: flex; gap: 6px; flex-shrink: 0; }
-  .tx-btn {
-    background: none; border: none; cursor: pointer; padding: 4px;
-    border-radius: 8px; font-size: 15px;
-  }
-  .tx-btn:hover { background: var(--orange-pale); }
+/* CAT LIST */
+.clist{display:flex;flex-direction:column;gap:8px}
+.cli{background:var(--wh);border-radius:14px;padding:14px 15px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh)}
+.cli-l{display:flex;align-items:center;gap:10px}
+.cli-ico{font-size:22px}
+.cli-nm{font-size:14px;font-weight:700}
+.cli-tp{font-size:11px;font-weight:600;margin-top:1px}
+.cli-tp.income{color:var(--gr)}.cli-tp.expense{color:var(--rd)}
+.cdel{background:none;border:none;cursor:pointer;font-size:16px;padding:5px}
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-soft); }
-  .empty-state .es-icon { font-size: 44px; margin-bottom: 10px; }
-  .empty-state p { font-size: 14px; font-weight: 600; }
+/* GOAL FORM */
+.gform{background:var(--wh);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.gform h3{font-size:14px;font-weight:800;margin-bottom:14px}
 
-  /* ── CATEGORY SUMMARY ── */
-  .cat-summary-panel {
-    background: var(--white); border-radius: 18px; padding: 16px;
-    margin-bottom: 14px; box-shadow: var(--shadow);
-  }
-  .cat-summary-title {
-    font-size: 12px; font-weight: 800; color: var(--text-soft);
-    margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px;
-  }
-  .cat-sum-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-  .cat-sum-tab {
-    flex: 1; padding: 6px; border-radius: 8px; border: none;
-    font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
-    cursor: pointer; background: var(--orange-pale); color: var(--text-soft);
-  }
-  .cat-sum-tab.active { background: var(--orange); color: var(--white); }
-  .cat-sum-rows { display: flex; flex-direction: column; gap: 7px; }
-  .cat-sum-row { display: flex; align-items: center; gap: 10px; }
-  .cat-sum-icon { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
-  .cat-sum-bar-wrap { flex: 1; }
-  .cat-sum-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; display: flex; justify-content: space-between; }
-  .cat-sum-name span { font-weight: 600; color: var(--text-soft); }
-  .cat-sum-track { height: 7px; background: var(--orange-pale); border-radius: 99px; overflow: hidden; }
-  .cat-sum-fill { height: 100%; border-radius: 99px; transition: width .5s ease; }
-  .cat-sum-fill.expense { background: linear-gradient(90deg, #FFB380, #E07A5F); }
-  .cat-sum-fill.income { background: linear-gradient(90deg, #80D9AE, #52B788); }
+/* FORM */
+.fg{margin-bottom:13px}
+.fg label{display:block;font-size:12px;font-weight:700;color:var(--ts);margin-bottom:5px}
+.fg input,.fg select{width:100%;padding:13px 13px;border-radius:13px;border:2px solid var(--bd);font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;color:var(--tx);background:var(--bg);outline:none;-webkit-appearance:none;appearance:none}
+.fg input:focus,.fg select:focus{border-color:var(--or)}
 
-  /* ── FAB ── */
-  .fab {
-    position: fixed; bottom: 90px; right: 20px; z-index: 100;
-    width: 56px; height: 56px; border-radius: 50%; border: none;
-    background: var(--orange); color: var(--white); font-size: 28px;
-    box-shadow: 0 4px 20px rgba(255,140,66,0.45);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: transform .15s;
-  }
-  .fab:active { transform: scale(.93); }
+/* TYPE TOGGLE */
+.ttog{display:flex;gap:8px;margin-bottom:14px}
+.tbtn{flex:1;padding:12px;border-radius:13px;border:2px solid var(--bd);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:var(--wh);color:var(--ts);display:flex;align-items:center;justify-content:center;gap:6px}
+.tbtn.income.active{border-color:var(--gr);background:#EAFAF3;color:var(--gr)}
+.tbtn.expense.active{border-color:var(--rd);background:#FDECEA;color:var(--rd)}
 
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-    background: var(--white); padding: 10px 0 20px;
-    display: flex; border-top: 1px solid var(--border);
-    box-shadow: 0 -2px 16px rgba(255,140,66,0.08);
-  }
-  .nav-btn {
-    flex: 1; border: none; background: none; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700;
-    color: var(--text-soft); padding: 4px 0;
-  }
-  .nav-btn.active { color: var(--orange); }
-  .nav-btn .nav-icon { font-size: 22px; }
+/* FAB */
+.fab{position:fixed;bottom:92px;right:18px;z-index:100;width:54px;height:54px;border-radius:50%;border:none;background:var(--or);color:#fff;font-size:28px;box-shadow:0 4px 20px rgba(255,140,66,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-  /* ── MODAL ── */
-  .overlay {
-    position: fixed; inset: 0; z-index: 200; background: rgba(61,44,30,0.35);
-    display: none; align-items: flex-end; backdrop-filter: blur(3px);
-  }
-  .overlay.open { display: flex; }
-  .modal {
-    background: var(--white); border-radius: 24px 24px 0 0;
-    padding: 20px 20px 40px; width: 100%;
-    max-height: 90vh; overflow-y: auto;
-    animation: slideUp .25s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--wh);padding:10px 0 20px;display:flex;border-top:1px solid var(--bd)}
+.nbtn{flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--ts)}
+.nbtn.active{color:var(--or)}
+.nbtn .ni{font-size:22px}
 
-  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 99px; margin: 0 auto 18px; }
-  .modal h2 { font-size: 18px; font-weight: 800; margin-bottom: 18px; }
+/* OVERLAY */
+.ov{position:fixed;inset:0;z-index:200;background:rgba(61,44,30,0.35);display:none;align-items:flex-end;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.ov.open{display:flex}
+.modal{background:var(--wh);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-height:90vh;overflow-y:auto;animation:su .25s ease}
+@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhnd{width:40px;height:4px;background:var(--bd);border-radius:99px;margin:0 auto 18px}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:18px}
+.mbtn{width:100%;padding:15px;border-radius:15px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;background:var(--or);color:#fff;cursor:pointer;margin-top:6px}
+.mbtn.sec{background:var(--orp);color:var(--or);margin-top:10px}
 
-  .type-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
-  .type-btn {
-    flex: 1; padding: 12px; border-radius: 14px; border: 2px solid var(--border);
-    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
-    cursor: pointer; background: var(--white); color: var(--text-soft);
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    transition: all .15s;
-  }
-  .type-btn.income.active { border-color: var(--green); background: #EAFAF3; color: var(--green); }
-  .type-btn.expense.active { border-color: var(--red); background: #FDECEA; color: var(--red); }
-
-  .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-soft); margin-bottom: 6px; }
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%; padding: 13px 14px; border-radius: 14px;
-    border: 2px solid var(--border); font-family: 'Nunito', sans-serif;
-    font-size: 15px; font-weight: 600; color: var(--text); background: var(--bg);
-    outline: none; transition: border .15s; appearance: none;
-  }
-  .form-group input:focus, .form-group select:focus { border-color: var(--orange); }
-
-  .cat-row { display: flex; gap: 8px; }
-  .cat-row select { flex: 1; }
-  .cat-add-btn {
-    width: 48px; height: 48px; border-radius: 14px; border: 2px solid var(--border);
-    background: var(--bg); font-size: 22px; cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; margin-top: 0;
-  }
-  .cat-add-btn:active { background: var(--orange-pale); }
-
-  .modal-btn {
-    width: 100%; padding: 15px; border-radius: 16px; border: none;
-    font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
-    background: var(--orange); color: var(--white); cursor: pointer;
-    margin-top: 6px; transition: opacity .15s;
-  }
-  .modal-btn:active { opacity: .85; }
-  .modal-btn.secondary {
-    background: var(--orange-pale); color: var(--orange); margin-top: 10px;
-  }
-
-  /* ── CATEGORIES PAGE ── */
-  .cat-list { display: flex; flex-direction: column; gap: 8px; }
-  .cat-list-item {
-    background: var(--white); border-radius: 14px; padding: 14px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: var(--shadow);
-  }
-  .cat-list-item .cli-left { display: flex; align-items: center; gap: 10px; }
-  .cat-list-item .cli-icon { font-size: 22px; }
-  .cat-list-item .cli-name { font-size: 14px; font-weight: 700; }
-  .cat-list-item .cli-type { font-size: 11px; font-weight: 600; margin-top: 1px; }
-  .cat-list-item .cli-type.income { color: var(--green); }
-  .cat-list-item .cli-type.expense { color: var(--red); }
-  .cat-del { background: none; border: none; cursor: pointer; font-size: 16px; padding: 4px; }
-
-  /* ── GOAL PAGE ── */
-  .goal-form { background: var(--white); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); margin-bottom: 12px; }
-  .goal-form h3 { font-size: 14px; font-weight: 800; margin-bottom: 14px; color: var(--text); }
-
-  /* Section title */
-  .section-title { font-size: 13px; font-weight: 800; color: var(--text-soft); margin-bottom: 10px; }
-
-  .toast {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px);
-    background: var(--text); color: var(--white); padding: 10px 20px;
-    border-radius: 99px; font-size: 13px; font-weight: 700; z-index: 999;
-    transition: transform .3s;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+/* TOAST */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--tx);color:#fff;padding:10px 22px;border-radius:99px;font-size:13px;font-weight:700;z-index:999;transition:transform .3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- HEADER -->
-<div class="header">
-  <div class="header-top">
-    <h1>💰 Kasam</h1>
-    <div class="month-nav">
-      <button onclick="changeMonth(-1)">‹</button>
-      <span class="month-label" id="monthLabel"></span>
-      <button onclick="changeMonth(1)">›</button>
+<div class="hdr">
+  <div class="hdr-top">
+    <h1>Kasam</h1>
+    <div class="mnav">
+      <button onclick="chMon(-1)">&#8249;</button>
+      <span class="mlbl" id="mlbl"></span>
+      <button onclick="chMon(1)">&#8250;</button>
     </div>
   </div>
-  <div class="summary-row">
-    <div class="summary-card">
-      <div class="s-label">Gelir</div>
-      <div class="s-val" id="hdrIncome">₺0</div>
-    </div>
-    <div class="summary-card">
-      <div class="s-label">Gider</div>
-      <div class="s-val" id="hdrExpense">₺0</div>
-    </div>
-    <div class="summary-card">
-      <div class="s-label">Net</div>
-      <div class="s-val" id="hdrNet">₺0</div>
-    </div>
+  <div class="srow">
+    <div class="sc"><div class="sl">Gelir</div><div class="sv" id="hInc">0</div></div>
+    <div class="sc"><div class="sl">Gider</div><div class="sv" id="hExp">0</div></div>
+    <div class="sc"><div class="sl">Net</div><div class="sv" id="hNet">0</div></div>
   </div>
 </div>
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('home')" id="tab-home">🏠 Özet</button>
-  <button class="tab" onclick="switchTab('list')" id="tab-list">📋 İşlemler</button>
-  <button class="tab" onclick="switchTab('cats')" id="tab-cats">🗂 Kategoriler</button>
-  <button class="tab" onclick="switchTab('goals')" id="tab-goals">🎯 Hedef</button>
+  <button class="tab active" id="tab-home" onclick="goTab('home')">Ozet</button>
+  <button class="tab" id="tab-list" onclick="goTab('list')">Islemler</button>
+  <button class="tab" id="tab-cats" onclick="goTab('cats')">Kategoriler</button>
+  <button class="tab" id="tab-goals" onclick="goTab('goals')">Hedef</button>
 </div>
 
-<!-- ── HOME TAB ── -->
-<div id="page-home">
-  <!-- Goal Bar -->
-  <div class="goal-panel">
-    <div class="gp-header">
-      <h3>🎯 Birikim Hedefi</h3>
-      <div class="goal-tabs">
-        <button class="goal-tab active" id="gbt-monthly" onclick="switchGoalView('monthly')">Aylık</button>
-        <button class="goal-tab" id="gbt-yearly" onclick="switchGoalView('yearly')">Yıllık</button>
-      </div>
+<!-- HOME -->
+<div class="page" id="pg-home">
+  <div class="gpanel">
+    <h3>Birikim Hedefi</h3>
+    <div class="gtabs">
+      <button class="gtab active" id="gt-m" onclick="setGV('monthly')">Aylik</button>
+      <button class="gtab" id="gt-y" onclick="setGV('yearly')">Yillik</button>
     </div>
-    <div class="goal-info">
-      <span id="goalInfoLeft">Hedef yok</span>
-      <span class="goal-pct" id="goalPct">—</span>
-    </div>
-    <div class="progress-track"><div class="progress-fill" id="goalBar" style="width:0%"></div></div>
-    <div class="goal-detail" id="goalDetail"></div>
+    <div class="ginfo"><span id="ginfoL">Hedef yok</span><span class="gpct" id="gpct">--</span></div>
+    <div class="ptrack"><div class="pfill" id="pbar" style="width:0%"></div></div>
+    <div class="gdet" id="gdet"></div>
   </div>
-
-  <!-- Advice -->
-  <div class="advice-panel" style="margin-top:14px;">
-    <div class="section-title">📊 Akıllı Tavsiyeler</div>
-    <div class="advice-cards" id="adviceCards"></div>
+  <div class="adv-wrap">
+    <div class="sec-title">Akilli Tavsiyeler</div>
+    <div id="advEl"></div>
   </div>
 </div>
 
-<!-- ── LIST TAB ── -->
-<div id="page-list" style="display:none">
-  <div class="section">
-    <!-- Category Summary -->
-    <div class="cat-summary-panel" id="catSummaryPanel">
-      <div class="cat-summary-title">Kategori Özeti</div>
-      <div class="cat-sum-tabs">
-        <button class="cat-sum-tab active" id="cst-expense" onclick="setCatSumView('expense')">🔴 Giderler</button>
-        <button class="cat-sum-tab" id="cst-income" onclick="setCatSumView('income')">✅ Gelirler</button>
-      </div>
-      <div class="cat-sum-rows" id="catSumRows"></div>
+<!-- LIST -->
+<div class="page" id="pg-list" style="display:none">
+  <div class="cspanel" id="cspanel">
+    <div class="sec-title">Kategori Ozeti</div>
+    <div class="cstabs">
+      <button class="cstab active" id="cst-e" onclick="setCSV('expense')">Giderler</button>
+      <button class="cstab" id="cst-i" onclick="setCSV('income')">Gelirler</button>
     </div>
-
-    <div class="section-title" id="listTitle">İşlemler</div>
-    <div class="tx-list" id="txList"></div>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <div class="es-icon">🌿</div>
-      <p>Bu ay hiç işlem yok.</p>
-    </div>
+    <div id="csrows"></div>
   </div>
+  <div class="sec-title" id="ltitle"></div>
+  <div class="txlist" id="txlist"></div>
+  <div class="empty" id="emptyEl" style="display:none"><div class="ei">🌿</div><p>Bu ay hic islem yok.</p></div>
 </div>
 
-<!-- ── CATS TAB ── -->
-<div id="page-cats" style="display:none">
-  <div class="section">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div class="section-title" style="margin-bottom:0">Kategorilerim</div>
-      <button class="modal-btn" style="width:auto;padding:8px 16px;font-size:13px" onclick="openCatModal()">+ Yeni</button>
-    </div>
-    <div class="cat-list" id="catList"></div>
+<!-- CATS -->
+<div class="page" id="pg-cats" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="sec-title" style="margin-bottom:0">Kategorilerim</div>
+    <button class="mbtn" style="width:auto;padding:8px 16px;font-size:13px;margin:0" onclick="openCatMod()">+ Yeni</button>
   </div>
+  <div class="clist" id="catListEl"></div>
 </div>
 
-<!-- ── GOALS TAB ── -->
-<div id="page-goals" style="display:none">
-  <div class="section">
-    <div class="goal-form">
-      <h3>📅 Aylık Birikim Hedefi</h3>
-      <div class="form-group">
-        <label>Hedef Tutar (₺)</label>
-        <input type="number" id="goalMonthlyInput" placeholder="ör. 5000" inputmode="numeric">
-      </div>
-      <button class="modal-btn" onclick="saveGoal('monthly')">Kaydet</button>
-    </div>
-    <div class="goal-form">
-      <h3>📆 Yıllık Birikim Hedefi</h3>
-      <div class="form-group">
-        <label>Hedef Tutar (₺)</label>
-        <input type="number" id="goalYearlyInput" placeholder="ör. 60000" inputmode="numeric">
-      </div>
-      <button class="modal-btn" onclick="saveGoal('yearly')">Kaydet</button>
-    </div>
+<!-- GOALS -->
+<div class="page" id="pg-goals" style="display:none">
+  <div class="gform">
+    <h3>Aylik Birikim Hedefi</h3>
+    <div class="fg"><label>Hedef Tutar (TL)</label><input type="number" id="gInpM" placeholder="ornek: 5000" inputmode="numeric"></div>
+    <button class="mbtn" onclick="saveGoal('monthly')">Kaydet</button>
+  </div>
+  <div class="gform">
+    <h3>Yillik Birikim Hedefi</h3>
+    <div class="fg"><label>Hedef Tutar (TL)</label><input type="number" id="gInpY" placeholder="ornek: 60000" inputmode="numeric"></div>
+    <button class="mbtn" onclick="saveGoal('yearly')">Kaydet</button>
   </div>
 </div>
 
 <!-- FAB -->
-<button class="fab" onclick="openTxModal()" id="fabBtn">+</button>
+<button class="fab" id="fabBtn" onclick="openTxMod(null)">+</button>
 
 <!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">🏠</span>Özet</button>
-  <button class="nav-btn" onclick="switchTab('list')" id="nav-list"><span class="nav-icon">📋</span>İşlemler</button>
-  <button class="nav-btn" onclick="switchTab('cats')" id="nav-cats"><span class="nav-icon">🗂</span>Kategoriler</button>
-  <button class="nav-btn" onclick="switchTab('goals')" id="nav-goals"><span class="nav-icon">🎯</span>Hedef</button>
+<div class="bnav">
+  <button class="nbtn active" id="nav-home" onclick="goTab('home')"><span class="ni">🏠</span>Ozet</button>
+  <button class="nbtn" id="nav-list" onclick="goTab('list')"><span class="ni">📋</span>Islemler</button>
+  <button class="nbtn" id="nav-cats" onclick="goTab('cats')"><span class="ni">🗂</span>Kategoriler</button>
+  <button class="nbtn" id="nav-goals" onclick="goTab('goals')"><span class="ni">🎯</span>Hedef</button>
 </div>
 
-<!-- ── TX MODAL ── -->
-<div class="overlay" id="txOverlay" onclick="closeOnOverlay(event,'txOverlay')">
+<!-- TX MODAL -->
+<div class="ov" id="txOv" onclick="ovClick(event,'txOv')">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h2 id="txModalTitle">Yeni İşlem</h2>
-
-    <div class="type-toggle">
-      <button class="type-btn income active" id="typeIncome" onclick="setType('income')">✅ Gelir</button>
-      <button class="type-btn expense" id="typeExpense" onclick="setType('expense')">🔴 Gider</button>
+    <div class="mhnd"></div>
+    <h2 id="txMTitle">Yeni Islem</h2>
+    <div class="ttog">
+      <button class="tbtn income active" id="tInc" onclick="setTT('income')">Gelir</button>
+      <button class="tbtn expense" id="tExp" onclick="setTT('expense')">Gider</button>
     </div>
-
-    <div class="form-group">
-      <label>Kategori</label>
-      <div class="cat-row">
-        <select id="txCat"></select>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Tutar (₺)</label>
-      <input type="number" id="txAmount" placeholder="0" inputmode="decimal">
-    </div>
-
-    <div class="form-group">
-      <label>Tarih</label>
-      <input type="date" id="txDate">
-    </div>
-
-    <div class="form-group">
-      <label>Not (opsiyonel)</label>
-      <input type="text" id="txNote" placeholder="Açıklama...">
-    </div>
-
-    <button class="modal-btn" onclick="saveTx()">Kaydet</button>
-    <button class="modal-btn secondary" onclick="closeModal('txOverlay')">İptal</button>
+    <div class="fg"><label>Kategori</label><select id="txCat"></select></div>
+    <div class="fg"><label>Tutar (TL)</label><input type="number" id="txAmt" placeholder="0" inputmode="decimal"></div>
+    <div class="fg"><label>Tarih</label><input type="date" id="txDt"></div>
+    <div class="fg"><label>Not (opsiyonel)</label><input type="text" id="txNote" placeholder="Aciklama..."></div>
+    <button class="mbtn" onclick="saveTx()">Kaydet</button>
+    <button class="mbtn sec" onclick="closeMod('txOv')">Iptal</button>
   </div>
 </div>
 
-<!-- ── CAT MODAL ── -->
-<div class="overlay" id="catOverlay" onclick="closeOnOverlay(event,'catOverlay')">
+<!-- CAT MODAL -->
+<div class="ov" id="catOv" onclick="ovClick(event,'catOv')">
   <div class="modal">
-    <div class="modal-handle"></div>
+    <div class="mhnd"></div>
     <h2>Yeni Kategori</h2>
-
-    <div class="type-toggle">
-      <button class="type-btn income active" id="catTypeIncome" onclick="setCatType('income')">✅ Gelir</button>
-      <button class="type-btn expense" id="catTypeExpense" onclick="setCatType('expense')">🔴 Gider</button>
+    <div class="ttog">
+      <button class="tbtn income active" id="ctInc" onclick="setCT('income')">Gelir</button>
+      <button class="tbtn expense" id="ctExp" onclick="setCT('expense')">Gider</button>
     </div>
-
-    <div class="form-group">
-      <label>Emoji</label>
-      <input type="text" id="catEmoji" placeholder="🎯" maxlength="4">
-    </div>
-
-    <div class="form-group">
-      <label>Kategori Adı</label>
-      <input type="text" id="catName" placeholder="ör. Market, Maaş...">
-    </div>
-
-    <button class="modal-btn" onclick="saveCat()">Kaydet</button>
-    <button class="modal-btn secondary" onclick="closeModal('catOverlay')">İptal</button>
+    <div class="fg"><label>Emoji</label><input type="text" id="catEmo" placeholder="🎯" maxlength="4"></div>
+    <div class="fg"><label>Kategori Adi</label><input type="text" id="catNm" placeholder="Market, Maas..."></div>
+    <button class="mbtn" onclick="saveCat()">Kaydet</button>
+    <button class="mbtn sec" onclick="closeMod('catOv')">Iptal</button>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-let data = JSON.parse(localStorage.getItem('gg_data') || '{"transactions":[],"categories":[],"goals":{}}');
-let curYear = new Date().getFullYear();
-let curMonth = new Date().getMonth(); // 0-indexed
-let currentTab = 'home';
-let editId = null;
-let txType = 'income';
-let catType = 'income';
-let goalView = 'monthly';
+var MONTHS = ['Ocak','Subat','Mart','Nisan','Mayis','Haziran','Temmuz','Agustos','Eylul','Ekim','Kasim','Aralik'];
+var d = JSON.parse(localStorage.getItem('gg_data') || '{"transactions":[],"categories":[],"goals":{}}');
+var cy = new Date().getFullYear();
+var cm = new Date().getMonth();
+var cTab = 'home';
+var editId = null;
+var txType = 'income';
+var catType = 'income';
+var gv = 'monthly';
+var csv = 'expense';
 
-const MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+function sv() { localStorage.setItem('gg_data', JSON.stringify(d)); }
 
-function save() { localStorage.setItem('gg_data', JSON.stringify(data)); }
-
-function fmt(n) {
-  return '₺' + Math.abs(n).toLocaleString('tr-TR', {minimumFractionDigits:0, maximumFractionDigits:2});
+function fmtN(n) {
+  var abs = Math.abs(n);
+  return 'TL ' + abs.toLocaleString('tr-TR', {minimumFractionDigits:0, maximumFractionDigits:0});
 }
 
-// ── MONTH NAV ──
-function changeMonth(d) {
-  curMonth += d;
-  if (curMonth > 11) { curMonth = 0; curYear++; }
-  if (curMonth < 0) { curMonth = 11; curYear--; }
+function chMon(dir) {
+  cm += dir;
+  if (cm > 11) { cm = 0; cy++; }
+  if (cm < 0) { cm = 11; cy--; }
   render();
 }
 
-function monthTxs() {
-  return data.transactions.filter(t => {
-    const dt = new Date(t.date);
-    return dt.getFullYear() === curYear && dt.getMonth() === curMonth;
+function mTxs() {
+  return d.transactions.filter(function(t) {
+    var dt = new Date(t.date + 'T12:00:00');
+    return dt.getFullYear() === cy && dt.getMonth() === cm;
   });
 }
 
-function yearTxs() {
-  return data.transactions.filter(t => new Date(t.date).getFullYear() === curYear);
+function yTxs() {
+  return d.transactions.filter(function(t) {
+    return new Date(t.date + 'T12:00:00').getFullYear() === cy;
+  });
 }
 
-// ── RENDER ──
+function sumType(arr, type) {
+  return arr.filter(function(t){return t.type===type;}).reduce(function(s,t){return s+t.amount;},0);
+}
+
 function render() {
-  document.getElementById('monthLabel').textContent = MONTHS[curMonth] + ' ' + curYear;
-
-  const txs = monthTxs();
-  const income = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
-  const expense = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-  const net = income - expense;
-
-  document.getElementById('hdrIncome').textContent = fmt(income);
-  document.getElementById('hdrExpense').textContent = fmt(expense);
-  document.getElementById('hdrNet').textContent = (net>=0?'':'-') + fmt(net);
-  document.getElementById('hdrNet').style.color = net >= 0 ? '#EAFAF3' : '#FDECEA';
-
-  renderGoalBar(income, expense, net);
-  renderAdvice(income, expense, net, txs);
+  document.getElementById('mlbl').textContent = MONTHS[cm] + ' ' + cy;
+  var txs = mTxs();
+  var inc = sumType(txs, 'income');
+  var exp = sumType(txs, 'expense');
+  var net = inc - exp;
+  document.getElementById('hInc').textContent = fmtN(inc);
+  document.getElementById('hExp').textContent = fmtN(exp);
+  document.getElementById('hNet').textContent = fmtN(net);
+  renderGoal(inc, exp, net);
+  renderAdvice(inc, exp, net, txs);
   renderList(txs);
   renderCats();
   renderGoalInputs();
 }
 
-// ── GOAL BAR ──
-function switchGoalView(v) {
-  goalView = v;
-  document.getElementById('gbt-monthly').classList.toggle('active', v==='monthly');
-  document.getElementById('gbt-yearly').classList.toggle('active', v==='yearly');
-  const txs = monthTxs();
-  const income = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
-  const expense = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-  renderGoalBar(income, expense, income-expense);
+function setGV(v) {
+  gv = v;
+  document.getElementById('gt-m').className = 'gtab' + (v==='monthly'?' active':'');
+  document.getElementById('gt-y').className = 'gtab' + (v==='yearly'?' active':'');
+  var txs = mTxs();
+  var inc = sumType(txs,'income'); var exp = sumType(txs,'expense');
+  renderGoal(inc, exp, inc-exp);
 }
 
-function renderGoalBar(income, expense, net) {
-  const isMonthly = goalView === 'monthly';
-  const goal = isMonthly ? (data.goals.monthly||0) : (data.goals.yearly||0);
-
-  let saved, label;
-  if (isMonthly) {
+function renderGoal(inc, exp, net) {
+  var isM = gv === 'monthly';
+  var goal = isM ? (d.goals.monthly||0) : (d.goals.yearly||0);
+  var saved, lbl;
+  if (isM) {
     saved = net > 0 ? net : 0;
-    label = 'Bu ay birikimim';
+    lbl = 'Bu ay birikimim';
   } else {
-    const ytxs = yearTxs();
-    const yi = ytxs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
-    const ye = ytxs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-    saved = Math.max(0, yi - ye);
-    label = curYear + ' birikimim';
+    var yt = yTxs();
+    saved = Math.max(0, sumType(yt,'income') - sumType(yt,'expense'));
+    lbl = cy + ' birikimim';
   }
-
   if (!goal) {
-    document.getElementById('goalInfoLeft').textContent = 'Hedef belirlenmedi';
-    document.getElementById('goalPct').textContent = '—';
-    document.getElementById('goalBar').style.width = '0%';
-    document.getElementById('goalDetail').textContent = '🎯 sekmesinden hedef belirleyin';
+    document.getElementById('ginfoL').textContent = 'Hedef belirlenmedi';
+    document.getElementById('gpct').textContent = '--';
+    document.getElementById('pbar').style.width = '0%';
+    document.getElementById('gdet').textContent = 'Hedef sekmesinden hedef belirleyin';
     return;
   }
-
-  const pct = Math.min(100, Math.round(saved/goal*100));
-  document.getElementById('goalInfoLeft').textContent = label + ': ' + fmt(saved);
-  document.getElementById('goalPct').textContent = '%' + pct;
-  document.getElementById('goalBar').style.width = pct + '%';
-  const rem = goal - saved;
-  document.getElementById('goalDetail').textContent =
-    rem > 0 ? 'Hedefe ' + fmt(rem) + ' kaldı' : '🎉 Hedefine ulaştın!';
+  var pct = Math.min(100, Math.round(saved/goal*100));
+  document.getElementById('ginfoL').textContent = lbl + ': ' + fmtN(saved);
+  document.getElementById('gpct').textContent = '%' + pct;
+  document.getElementById('pbar').style.width = pct + '%';
+  var rem = goal - saved;
+  document.getElementById('gdet').textContent = rem > 0 ? ('Hedefe ' + fmtN(rem) + ' kaldi') : 'Hedefe ulastin!';
 }
 
-// ── ADVICE ──
-function renderAdvice(income, expense, net, txs) {
-  const el = document.getElementById('adviceCards');
-  const cards = [];
-  const today = new Date();
-  const isCurrentMonth = today.getFullYear()===curYear && today.getMonth()===curMonth;
-  const dayOfMonth = today.getDate();
-  const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
-  const daysLeft = isCurrentMonth ? (daysInMonth - dayOfMonth) : 0;
+function renderAdvice(inc, exp, net, txs) {
+  var cards = [];
+  var today = new Date();
+  var isCur = today.getFullYear()===cy && today.getMonth()===cm;
+  var dom = today.getDate();
+  var dim = new Date(cy, cm+1, 0).getDate();
+  var dleft = isCur ? (dim - dom) : 0;
 
   if (!txs.length) {
-    cards.push({cls:'orange', icon:'💡', text:'Henüz işlem yok. Gelir ve giderlerini ekleyince tavsiyeler burada görünecek.'});
+    cards.push({c:'orange', i:'💡', t:'Henuz islem yok. Gelir ve giderlerini ekleyince tavsiyeler burada gorunecek.'});
   } else {
-    // Daily limit
-    if (isCurrentMonth && daysLeft > 0 && income > 0) {
-      const dailyBudget = Math.round(net / daysLeft);
-      if (dailyBudget > 0) {
-        cards.push({cls:'green', icon:'✅', text:'Günlük harcama limitin yaklaşık ' + fmt(dailyBudget) + '. Bütçen sağlıklı görünüyor!'});
-      } else if (dailyBudget === 0) {
-        cards.push({cls:'yellow', icon:'⚖️', text:'Bütçen tam dengede. Ekstra harcamalardan kaçın.'});
-      } else {
-        cards.push({cls:'red', icon:'⚠️', text:'Harcamaların gelirinizi aşıyor! Günlük ' + fmt(Math.abs(dailyBudget)) + ' açık var.'});
-      }
+    if (isCur && dleft > 0 && inc > 0) {
+      var db = Math.round(net / dleft);
+      if (db > 0) cards.push({c:'green', i:'✅', t:'Gunluk harcama limitin yaklasik ' + fmtN(db) + '. Butcen saglikli gorunuyor!'});
+      else if (db < 0) cards.push({c:'red', i:'⚠️', t:'Harcamalar gelirinizi asiyor! Gunluk ' + fmtN(Math.abs(db)) + ' acik var.'});
+      else cards.push({c:'yellow', i:'⚖️', t:'Butcen tam dengede. Ekstra harcamalardan kacin.'});
     }
-
-    // Days warning
-    if (isCurrentMonth && daysLeft <= 5 && daysLeft > 0) {
-      cards.push({cls:'yellow', icon:'⏳', text:'Ayın bitmesine ' + daysLeft + ' gün kaldı. Son virajdasın, dikkatli ol!'});
+    if (isCur && dleft <= 5 && dleft > 0) {
+      cards.push({c:'yellow', i:'⏳', t:'Ayin bitmesine ' + dleft + ' gun kaldi. Son virajdasin, dikkatli ol!'});
     }
-
-    // Surplus
-    if (net > 0 && isCurrentMonth) {
-      const extra = Math.round(net * 0.2);
-      if (extra > 200) {
-        cards.push({cls:'green', icon:'🎉', text:'Artıdasın! Keyif için ' + fmt(extra) + ' ayırabilirsin, geri kalanı birikimine ekle.'});
-      }
+    if (net > 0 && isCur) {
+      var extra = Math.round(net * 0.2);
+      if (extra > 200) cards.push({c:'green', i:'🎉', t:'Artidasin! Keyif icin ' + fmtN(extra) + ' ayirabilirsin, gerisini birikime ekle.'});
     }
-
-    // Expense ratio
-    if (income > 0) {
-      const ratio = expense / income;
-      if (ratio > 0.85) {
-        cards.push({cls:'red', icon:'🔴', text:'Giderlerin gelirinizin %' + Math.round(ratio*100) + 'u. Bu oran cok yuksek — buyuk kalemlerini gozden gecir.'});
-      } else if (ratio < 0.5) {
-        cards.push({cls:'green', icon:'💚', text:'Harika! Gelirinizin sadece %' + Math.round(ratio*100) + 'ini harciyorsunuz. Birikim icin mukemmel bir ay.'});
-      }
+    if (inc > 0) {
+      var ratio = exp / inc;
+      if (ratio > 0.85) cards.push({c:'red', i:'🔴', t:'Giderler gelirinizin %' + Math.round(ratio*100) + ' orani. Cok yuksek — buyuk kalemleri gozden gecir.'});
+      else if (ratio < 0.5) cards.push({c:'green', i:'💚', t:'Harika! Gelirinizin sadece %' + Math.round(ratio*100) + ' ini harciyorsunuz.'});
     }
-
-    // Monthly goal check
-    const mGoal = data.goals.monthly || 0;
-    if (mGoal > 0 && isCurrentMonth && daysLeft > 0) {
-      const needed = mGoal - Math.max(0, net);
-      if (needed > 0) {
-        const dailyNeeded = Math.round(needed / daysLeft);
-        cards.push({cls:'orange', icon:'🎯', text:'Aylık hedefe ulaşmak için kalan ' + daysLeft + ' günde günlük ' + fmt(dailyNeeded) + ' biriktirmen gerekiyor.'});
-      } else {
-        cards.push({cls:'green', icon:'🏆', text:'Aylık birikim hedefindesin! Yıllık hedefe de göz at.'});
-      }
+    var mg = d.goals.monthly || 0;
+    if (mg > 0 && isCur && dleft > 0) {
+      var needed = mg - Math.max(0, net);
+      if (needed > 0) cards.push({c:'orange', i:'🎯', t:'Aylik hedefe ulasmak icin kalan ' + dleft + ' gunde gunluk ' + fmtN(Math.round(needed/dleft)) + ' biriktirmen gerekiyor.'});
+      else cards.push({c:'green', i:'🏆', t:'Aylik birikim hedefindesin!'});
     }
   }
 
-  el.innerHTML = cards.map(c =>
-    '<div class="advice-card ' + c.cls + '"><div class="ac-icon">' + c.icon + '</div><div class="ac-text">' + c.text + '</div></div>'
-  ).join('');
+  var html = '';
+  for (var i=0; i<cards.length; i++) {
+    html += '<div class="acard ' + cards[i].c + '"><div class="ai">' + cards[i].i + '</div><div class="at">' + cards[i].t + '</div></div>';
+  }
+  document.getElementById('advEl').innerHTML = html;
 }
 
-// ── LIST ──
+function setCSV(v) {
+  csv = v;
+  document.getElementById('cst-e').className = 'cstab' + (v==='expense'?' active':'');
+  document.getElementById('cst-i').className = 'cstab' + (v==='income'?' active':'');
+  renderCatSum(mTxs());
+}
+
+function renderCatSum(txs) {
+  var filtered = txs.filter(function(t){return t.type===csv;});
+  var panel = document.getElementById('cspanel');
+  var el = document.getElementById('csrows');
+  if (!filtered.length) { panel.style.display='none'; return; }
+  panel.style.display='';
+
+  var map = {};
+  filtered.forEach(function(t){ map[t.catId] = (map[t.catId]||0) + t.amount; });
+  var total = 0;
+  for (var k in map) total += map[k];
+  var entries = [];
+  for (var k in map) entries.push([k, map[k]]);
+  entries.sort(function(a,b){return b[1]-a[1];});
+
+  var html = '';
+  for (var i=0; i<entries.length; i++) {
+    var catId = entries[i][0];
+    var sum = entries[i][1];
+    var cat = null;
+    for (var j=0; j<d.categories.length; j++) { if (d.categories[j].id===catId) { cat=d.categories[j]; break; } }
+    var icon = cat ? cat.emoji : (csv==='income'?'💰':'💸');
+    var name = cat ? cat.name : '--';
+    var pct = total > 0 ? Math.round(sum/total*100) : 0;
+    html += '<div class="csrow">';
+    html += '<div class="csico">' + icon + '</div>';
+    html += '<div class="csbw">';
+    html += '<div class="csname">' + esc(name) + '<span>' + fmtN(sum) + ' %' + pct + '</span></div>';
+    html += '<div class="cstrk"><div class="csfill ' + csv + '" style="width:' + pct + '%"></div></div>';
+    html += '</div></div>';
+  }
+  el.innerHTML = html;
+}
+
 function renderList(txs) {
-  const sorted = [...txs].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const el = document.getElementById('txList');
-  const empty = document.getElementById('emptyState');
-  document.getElementById('listTitle').textContent = MONTHS[curMonth] + ' ' + curYear + ' İşlemleri';
+  var sorted = txs.slice().sort(function(a,b){return new Date(b.date+' 12:00')-new Date(a.date+' 12:00');});
+  var el = document.getElementById('txlist');
+  var em = document.getElementById('emptyEl');
+  document.getElementById('ltitle').textContent = MONTHS[cm] + ' ' + cy + ' Islemleri';
 
   if (!sorted.length) {
     el.innerHTML = '';
-    empty.style.display = '';
-    document.getElementById('catSummaryPanel').style.display = 'none';
+    em.style.display = '';
+    document.getElementById('cspanel').style.display = 'none';
     return;
   }
-  empty.style.display = 'none';
-  renderCatSummary(txs);
+  em.style.display = 'none';
+  renderCatSum(txs);
 
-  el.innerHTML = sorted.map(function(t) {
-    var cat = data.categories.find(function(c){return c.id===t.catId;});
+  var html = '';
+  for (var i=0; i<sorted.length; i++) {
+    var t = sorted[i];
+    var cat = null;
+    for (var j=0; j<d.categories.length; j++) { if (d.categories[j].id===t.catId) { cat=d.categories[j]; break; } }
     var icon = cat ? cat.emoji : (t.type==='income'?'💰':'💸');
-    var catName = cat ? cat.name : '—';
+    var catName = cat ? cat.name : '--';
     var dt = new Date(t.date + 'T12:00:00');
-    var dateStr = dt.toLocaleDateString('tr-TR', {day:'2-digit',month:'short'});
-    var noteHtml = t.note ? '<div class="tx-note">' + escHtml(t.note) + '</div>' : '';
+    var ds = dt.toLocaleDateString('tr-TR', {day:'2-digit',month:'short'});
     var sign = t.type==='income' ? '+' : '-';
-    return '<div class="tx-item">' +
-      '<div class="tx-dot ' + t.type + '">' + icon + '</div>' +
-      '<div class="tx-body">' +
-        '<div class="tx-cat">' + escHtml(catName) + '</div>' +
-        noteHtml +
-        '<div class="tx-date">' + dateStr + '</div>' +
-      '</div>' +
-      '<div class="tx-amount ' + t.type + '">' + sign + fmt(t.amount) + '</div>' +
-      '<div class="tx-actions">' +
-        '<button class="tx-btn" onclick="editTx(\'' + t.id + '\')">&#9999;&#65039;</button>' +
-        '<button class="tx-btn" onclick="deleteTx(\'' + t.id + '\')">&#128465;</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-let catSumView = 'expense';
-
-function setCatSumView(v) {
-  catSumView = v;
-  document.getElementById('cst-expense').classList.toggle('active', v==='expense');
-  document.getElementById('cst-income').classList.toggle('active', v==='income');
-  renderCatSummary(monthTxs());
-}
-
-function renderCatSummary(txs) {
-  const filtered = txs.filter(t => t.type === catSumView);
-  const el = document.getElementById('catSumRows');
-  const panel = document.getElementById('catSummaryPanel');
-
-  if (!filtered.length) {
-    panel.style.display = 'none';
-    return;
+    html += '<div class="txi">';
+    html += '<div class="txdot ' + t.type + '">' + icon + '</div>';
+    html += '<div class="txbody">';
+    html += '<div class="txcat">' + esc(catName) + '</div>';
+    if (t.note) html += '<div class="txnote">' + esc(t.note) + '</div>';
+    html += '<div class="txdate">' + ds + '</div>';
+    html += '</div>';
+    html += '<div class="txamt ' + t.type + '">' + sign + fmtN(t.amount) + '</div>';
+    html += '<div class="txact">';
+    html += '<button class="txbtn" onclick="openTxMod(\'' + t.id + '\')">&#9999;&#65039;</button>';
+    html += '<button class="txbtn" onclick="delTx(\'' + t.id + '\')">&#128465;</button>';
+    html += '</div>';
+    html += '</div>';
   }
-  panel.style.display = '';
-
-  // Group by category
-  const map = {};
-  filtered.forEach(t => {
-    map[t.catId] = (map[t.catId] || 0) + t.amount;
-  });
-
-  const total = Object.values(map).reduce((s,v)=>s+v,0);
-  const sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
-
-  el.innerHTML = sorted.map(([catId, sum]) => {
-    const cat = data.categories.find(c=>c.id===catId);
-    const icon = cat ? cat.emoji : (catSumView==='income'?'💰':'💸');
-    const name = cat ? cat.name : '—';
-    const pct = total > 0 ? Math.round(sum/total*100) : 0;
-    return '<div class="cat-sum-row">' +
-      '<div class="cat-sum-icon">' + icon + '</div>' +
-      '<div class="cat-sum-bar-wrap">' +
-        '<div class="cat-sum-name">' + escHtml(name) + '<span>' + fmt(sum) + ' · %' + pct + '</span></div>' +
-        '<div class="cat-sum-track"><div class="cat-sum-fill ' + catSumView + '" style="width:' + pct + '%"></div></div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+  el.innerHTML = html;
 }
 
-
-// ── CATS ──
 function renderCats() {
-  const el = document.getElementById('catList');
-  if (!data.categories.length) {
-    el.innerHTML = '<div class="empty-state"><div class="es-icon">🗂</div><p>Henüz kategori yok. Ekle butonuna bas.</p></div>';
+  var el = document.getElementById('catListEl');
+  if (!d.categories.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">🗂</div><p>Henuz kategori yok.</p></div>';
     return;
   }
-  el.innerHTML = data.categories.map(c=>`
-    <div class="cat-list-item">
-      <div class="cli-left">
-        <div class="cli-icon">${c.emoji}</div>
-        <div>
-          <div class="cli-name">${escHtml(c.name)}</div>
-          <div class="cli-type ${c.type}">${c.type==='income'?'Gelir':'Gider'}</div>
-        </div>
-      </div>
-      <button class="cat-del" onclick="deleteCat('${c.id}')">🗑</button>
-    </div>
-  `).join('');
+  var html = '';
+  for (var i=0; i<d.categories.length; i++) {
+    var c = d.categories[i];
+    var tp = c.type==='income' ? 'Gelir' : 'Gider';
+    html += '<div class="cli">';
+    html += '<div class="cli-l"><div class="cli-ico">' + c.emoji + '</div>';
+    html += '<div><div class="cli-nm">' + esc(c.name) + '</div>';
+    html += '<div class="cli-tp ' + c.type + '">' + tp + '</div></div></div>';
+    html += '<button class="cdel" onclick="delCat(\'' + c.id + '\')">&#128465;</button>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
 }
 
-// ── GOAL INPUTS ──
 function renderGoalInputs() {
-  const mi = document.getElementById('goalMonthlyInput');
-  const yi = document.getElementById('goalYearlyInput');
-  if (mi && data.goals.monthly) mi.value = data.goals.monthly;
-  if (yi && data.goals.yearly) yi.value = data.goals.yearly;
+  var m = document.getElementById('gInpM');
+  var y = document.getElementById('gInpY');
+  if (d.goals.monthly) m.value = d.goals.monthly;
+  if (d.goals.yearly) y.value = d.goals.yearly;
 }
 
 function saveGoal(type) {
-  const val = parseFloat(document.getElementById('goal' + (type==='monthly'?'Monthly':'Yearly') + 'Input').value);
-  if (!val || val <= 0) { showToast('Geçerli bir tutar girin'); return; }
-  data.goals[type] = val;
-  save();
-  showToast('Hedef kaydedildi!');
-  render();
+  var inp = document.getElementById(type==='monthly'?'gInpM':'gInpY');
+  var val = parseFloat(inp.value);
+  if (!val || val<=0) { toast('Gecerli tutar girin'); return; }
+  d.goals[type] = val;
+  sv(); toast('Hedef kaydedildi!'); render();
 }
 
-// ── TX MODAL ──
-function openTxModal(id=null) {
+function openTxMod(id) {
   editId = id;
-  const modal = document.getElementById('txOverlay');
-  document.getElementById('txModalTitle').textContent = id ? 'İşlemi Düzenle' : 'Yeni İşlem';
-
+  document.getElementById('txMTitle').textContent = id ? 'Islemi Duzenle' : 'Yeni Islem';
   if (id) {
-    const t = data.transactions.find(x=>x.id===id);
-    setType(t.type);
-    populateCatSelect(t.catId);
-    document.getElementById('txAmount').value = t.amount;
-    document.getElementById('txDate').value = t.date;
-    document.getElementById('txNote').value = t.note || '';
+    var t = null;
+    for (var i=0; i<d.transactions.length; i++) { if (d.transactions[i].id===id) { t=d.transactions[i]; break; } }
+    setTT(t.type);
+    fillCatSel(t.catId);
+    document.getElementById('txAmt').value = t.amount;
+    document.getElementById('txDt').value = t.date;
+    document.getElementById('txNote').value = t.note||'';
   } else {
-    setType('income');
-    populateCatSelect();
-    document.getElementById('txAmount').value = '';
-    document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+    setTT('income');
+    fillCatSel(null);
+    document.getElementById('txAmt').value = '';
+    document.getElementById('txDt').value = new Date().toISOString().split('T')[0];
     document.getElementById('txNote').value = '';
   }
-  modal.classList.add('open');
+  document.getElementById('txOv').className = 'ov open';
 }
 
-function setType(t) {
+function setTT(t) {
   txType = t;
-  document.getElementById('typeIncome').classList.toggle('active', t==='income');
-  document.getElementById('typeExpense').classList.toggle('active', t==='expense');
-  populateCatSelect();
+  document.getElementById('tInc').className = 'tbtn income' + (t==='income'?' active':'');
+  document.getElementById('tExp').className = 'tbtn expense' + (t==='expense'?' active':'');
+  fillCatSel(null);
 }
 
-function populateCatSelect(selectedId=null) {
-  const sel = document.getElementById('txCat');
-  const cats = data.categories.filter(c=>c.type===txType);
-  if (!cats.length) {
-    sel.innerHTML = '<option value="">— Önce kategori ekle —</option>';
-    return;
+function fillCatSel(selId) {
+  var sel = document.getElementById('txCat');
+  var cats = d.categories.filter(function(c){return c.type===txType;});
+  if (!cats.length) { sel.innerHTML = '<option value="">-- Once kategori ekle --</option>'; return; }
+  var html = '';
+  for (var i=0; i<cats.length; i++) {
+    var c = cats[i];
+    html += '<option value="' + c.id + '"' + (c.id===selId?' selected':'') + '>' + c.emoji + ' ' + c.name + '</option>';
   }
-  sel.innerHTML = cats.map(c=>`<option value="${c.id}" ${c.id===selectedId?'selected':''}>${c.emoji} ${c.name}</option>`).join('');
+  sel.innerHTML = html;
 }
 
 function saveTx() {
-  const catId = document.getElementById('txCat').value;
-  const amount = parseFloat(document.getElementById('txAmount').value);
-  const date = document.getElementById('txDate').value;
-  const note = document.getElementById('txNote').value.trim();
-
-  if (!catId) { showToast('Kategori seçin'); return; }
-  if (!amount || amount <= 0) { showToast('Geçerli tutar girin'); return; }
-  if (!date) { showToast('Tarih seçin'); return; }
-
+  var catId = document.getElementById('txCat').value;
+  var amt = parseFloat(document.getElementById('txAmt').value);
+  var dt = document.getElementById('txDt').value;
+  var note = document.getElementById('txNote').value.trim();
+  if (!catId) { toast('Kategori secin'); return; }
+  if (!amt || amt<=0) { toast('Gecerli tutar girin'); return; }
+  if (!dt) { toast('Tarih secin'); return; }
   if (editId) {
-    const t = data.transactions.find(x=>x.id===editId);
-    Object.assign(t, {type:txType, catId, amount, date, note});
+    for (var i=0; i<d.transactions.length; i++) {
+      if (d.transactions[i].id===editId) {
+        d.transactions[i].type=txType; d.transactions[i].catId=catId;
+        d.transactions[i].amount=amt; d.transactions[i].date=dt; d.transactions[i].note=note;
+        break;
+      }
+    }
   } else {
-    data.transactions.push({id: Date.now().toString(), type:txType, catId, amount, date, note});
+    d.transactions.push({id:Date.now().toString(), type:txType, catId:catId, amount:amt, date:dt, note:note});
   }
-  save();
-  closeModal('txOverlay');
-  showToast(editId ? 'İşlem güncellendi' : 'İşlem eklendi');
-  editId = null;
-  render();
+  sv(); closeMod('txOv'); toast(editId?'Guncellendi':'Eklendi'); editId=null; render();
 }
 
-function editTx(id) { openTxModal(id); }
-
-function deleteTx(id) {
-  if (!confirm('Bu işlemi silmek istiyor musun?')) return;
-  data.transactions = data.transactions.filter(t=>t.id!==id);
-  save(); render(); showToast('Silindi');
+function delTx(id) {
+  if (!confirm('Bu islemi sil?')) return;
+  d.transactions = d.transactions.filter(function(t){return t.id!==id;});
+  sv(); render(); toast('Silindi');
 }
 
-// ── CAT MODAL ──
-function openCatModal() {
-  setCatType('income');
-  document.getElementById('catEmoji').value = '';
-  document.getElementById('catName').value = '';
-  document.getElementById('catOverlay').classList.add('open');
+function openCatMod() {
+  setCT('income');
+  document.getElementById('catEmo').value='';
+  document.getElementById('catNm').value='';
+  document.getElementById('catOv').className='ov open';
 }
 
-function setCatType(t) {
-  catType = t;
-  document.getElementById('catTypeIncome').classList.toggle('active', t==='income');
-  document.getElementById('catTypeExpense').classList.toggle('active', t==='expense');
+function setCT(t) {
+  catType=t;
+  document.getElementById('ctInc').className='tbtn income'+(t==='income'?' active':'');
+  document.getElementById('ctExp').className='tbtn expense'+(t==='expense'?' active':'');
 }
 
 function saveCat() {
-  const name = document.getElementById('catName').value.trim();
-  const emoji = document.getElementById('catEmoji').value.trim() || (catType==='income'?'💰':'💸');
-  if (!name) { showToast('Kategori adı girin'); return; }
-  if (data.categories.some(c=>c.name.toLowerCase()===name.toLowerCase()&&c.type===catType)) {
-    showToast('Bu kategori zaten var'); return;
+  var name = document.getElementById('catNm').value.trim();
+  var emoji = document.getElementById('catEmo').value.trim() || (catType==='income'?'💰':'💸');
+  if (!name) { toast('Kategori adi girin'); return; }
+  for (var i=0; i<d.categories.length; i++) {
+    if (d.categories[i].name.toLowerCase()===name.toLowerCase() && d.categories[i].type===catType) {
+      toast('Bu kategori zaten var'); return;
+    }
   }
-  data.categories.push({id: Date.now().toString(), type:catType, name, emoji});
-  save(); closeModal('catOverlay'); showToast('Kategori eklendi'); render();
+  d.categories.push({id:Date.now().toString(), type:catType, name:name, emoji:emoji});
+  sv(); closeMod('catOv'); toast('Kategori eklendi'); render();
 }
 
-function deleteCat(id) {
-  if (data.transactions.some(t=>t.catId===id)) {
-    showToast('Bu kategoride işlem var, silinemez'); return;
+function delCat(id) {
+  for (var i=0; i<d.transactions.length; i++) {
+    if (d.transactions[i].catId===id) { toast('Bu kategoride islem var, silinemez'); return; }
   }
   if (!confirm('Kategoriyi sil?')) return;
-  data.categories = data.categories.filter(c=>c.id!==id);
-  save(); render(); showToast('Silindi');
+  d.categories = d.categories.filter(function(c){return c.id!==id;});
+  sv(); render(); toast('Silindi');
 }
 
-// ── MODAL HELPERS ──
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function closeOnOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+function closeMod(id) { document.getElementById(id).className='ov'; }
+function ovClick(e,id) { if (e.target===document.getElementById(id)) closeMod(id); }
 
-// ── TABS ──
-function switchTab(t) {
-  currentTab = t;
-  ['home','list','cats','goals'].forEach(x => {
-    document.getElementById('page-'+x).style.display = x===t ? '' : 'none';
-    document.getElementById('tab-'+x).classList.toggle('active', x===t);
-    document.getElementById('nav-'+x).classList.toggle('active', x===t);
-  });
-  document.getElementById('fabBtn').style.display = (t==='list'||t==='home') ? '' : 'none';
-  if (t==='list') document.getElementById('fabBtn').onclick = () => openTxModal();
-  if (t==='cats') { document.getElementById('fabBtn').style.display=''; document.getElementById('fabBtn').onclick = () => openCatModal(); }
+function goTab(t) {
+  cTab=t;
+  var pages=['home','list','cats','goals'];
+  for (var i=0; i<pages.length; i++) {
+    document.getElementById('pg-'+pages[i]).style.display = pages[i]===t?'':'none';
+    document.getElementById('tab-'+pages[i]).className='tab'+(pages[i]===t?' active':'');
+    document.getElementById('nav-'+pages[i]).className='nbtn'+(pages[i]===t?' active':'');
+  }
+  var fab=document.getElementById('fabBtn');
+  if (t==='cats') { fab.style.display='flex'; fab.onclick=function(){openCatMod();}; }
+  else if (t==='goals') { fab.style.display='none'; }
+  else { fab.style.display='flex'; fab.onclick=function(){openTxMod(null);}; }
 }
 
-// ── TOAST ──
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 2200);
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── INIT ──
+function toast(msg) {
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show';
+  setTimeout(function(){el.className='toast';},2200);
+}
+
 render();
 </script>
 </body>
