@@ -135,6 +135,33 @@
   .empty-state .es-icon { font-size: 44px; margin-bottom: 10px; }
   .empty-state p { font-size: 14px; font-weight: 600; }
 
+  /* ── CATEGORY SUMMARY ── */
+  .cat-summary-panel {
+    background: var(--white); border-radius: 18px; padding: 16px;
+    margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .cat-summary-title {
+    font-size: 12px; font-weight: 800; color: var(--text-soft);
+    margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px;
+  }
+  .cat-sum-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+  .cat-sum-tab {
+    flex: 1; padding: 6px; border-radius: 8px; border: none;
+    font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700;
+    cursor: pointer; background: var(--orange-pale); color: var(--text-soft);
+  }
+  .cat-sum-tab.active { background: var(--orange); color: var(--white); }
+  .cat-sum-rows { display: flex; flex-direction: column; gap: 7px; }
+  .cat-sum-row { display: flex; align-items: center; gap: 10px; }
+  .cat-sum-icon { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
+  .cat-sum-bar-wrap { flex: 1; }
+  .cat-sum-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .cat-sum-name span { font-weight: 600; color: var(--text-soft); }
+  .cat-sum-track { height: 7px; background: var(--orange-pale); border-radius: 99px; overflow: hidden; }
+  .cat-sum-fill { height: 100%; border-radius: 99px; transition: width .5s ease; }
+  .cat-sum-fill.expense { background: linear-gradient(90deg, #FFB380, #E07A5F); }
+  .cat-sum-fill.income { background: linear-gradient(90deg, #80D9AE, #52B788); }
+
   /* ── FAB ── */
   .fab {
     position: fixed; bottom: 90px; right: 20px; z-index: 100;
@@ -319,6 +346,16 @@
 <!-- ── LIST TAB ── -->
 <div id="page-list" style="display:none">
   <div class="section">
+    <!-- Category Summary -->
+    <div class="cat-summary-panel" id="catSummaryPanel">
+      <div class="cat-summary-title">Kategori Özeti</div>
+      <div class="cat-sum-tabs">
+        <button class="cat-sum-tab active" id="cst-expense" onclick="setCatSumView('expense')">🔴 Giderler</button>
+        <button class="cat-sum-tab" id="cst-income" onclick="setCatSumView('income')">✅ Gelirler</button>
+      </div>
+      <div class="cat-sum-rows" id="catSumRows"></div>
+    </div>
+
     <div class="section-title" id="listTitle">İşlemler</div>
     <div class="tx-list" id="txList"></div>
     <div class="empty-state" id="emptyState" style="display:none">
@@ -615,9 +652,11 @@ function renderList(txs) {
   if (!sorted.length) {
     el.innerHTML = '';
     empty.style.display = '';
+    document.getElementById('catSummaryPanel').style.display = 'none';
     return;
   }
   empty.style.display = 'none';
+  renderCatSummary(txs);
 
   el.innerHTML = sorted.map(t => {
     const cat = data.categories.find(c=>c.id===t.catId);
@@ -641,7 +680,50 @@ function renderList(txs) {
   }).join('');
 }
 
-function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+let catSumView = 'expense';
+
+function setCatSumView(v) {
+  catSumView = v;
+  document.getElementById('cst-expense').classList.toggle('active', v==='expense');
+  document.getElementById('cst-income').classList.toggle('active', v==='income');
+  renderCatSummary(monthTxs());
+}
+
+function renderCatSummary(txs) {
+  const filtered = txs.filter(t => t.type === catSumView);
+  const el = document.getElementById('catSumRows');
+  const panel = document.getElementById('catSummaryPanel');
+
+  if (!filtered.length) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  // Group by category
+  const map = {};
+  filtered.forEach(t => {
+    map[t.catId] = (map[t.catId] || 0) + t.amount;
+  });
+
+  const total = Object.values(map).reduce((s,v)=>s+v,0);
+  const sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+
+  el.innerHTML = sorted.map(([catId, sum]) => {
+    const cat = data.categories.find(c=>c.id===catId);
+    const icon = cat ? cat.emoji : (catSumView==='income'?'💰':'💸');
+    const name = cat ? cat.name : '—';
+    const pct = total > 0 ? Math.round(sum/total*100) : 0;
+    return '<div class="cat-sum-row">' +
+      '<div class="cat-sum-icon">' + icon + '</div>' +
+      '<div class="cat-sum-bar-wrap">' +
+        '<div class="cat-sum-name">' + escHtml(name) + '<span>' + fmt(sum) + ' · %' + pct + '</span></div>' +
+        '<div class="cat-sum-track"><div class="cat-sum-fill ' + catSumView + '" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 
 // ── CATS ──
 function renderCats() {
